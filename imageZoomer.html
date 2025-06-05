@@ -3,509 +3,536 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ultra Image Zoomer Pro</title>
+    <title>VisionX Ultra Pro</title>
     <style>
       * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
 
       body {
-          font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          min-height: 100vh;
-          overflow-x: hidden;
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        overflow-x: hidden;
       }
 
       .container {
-          max-width: 1400px;
-          margin: 0 auto;
-          padding: 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 2rem;
       }
 
       .header {
-          text-align: center;
-          margin-bottom: 3rem;
-          animation: fadeInDown 1s ease-out;
+        text-align: center;
+        margin-bottom: 3rem;
+        animation: fadeInDown 1s ease-out;
       }
 
       .header h1 {
-          font-size: 4rem;
-          font-weight: 800;
-          background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
-          background-size: 300% 300%;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-          animation: gradientShift 3s ease infinite;
-          margin-bottom: 1rem;
-          text-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        font-size: 4rem;
+        font-weight: 800;
+        background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+        background-size: 300% 300%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: gradientShift 3s ease infinite;
+        margin-bottom: 1rem;
+        text-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
       }
 
       .header p {
-          font-size: 1.5rem;
-          color: rgba(255,255,255,0.9);
-          font-weight: 300;
-          letter-spacing: 0.5px;
+        font-size: 1.5rem;
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 300;
+        letter-spacing: 0.5px;
       }
 
       .input-section {
-          background: rgba(255,255,255,0.1);
-          backdrop-filter: blur(20px);
-          border-radius: 25px;
-          padding: 2.5rem;
-          margin-bottom: 2rem;
-          border: 1px solid rgba(255,255,255,0.2);
-          box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-          animation: fadeInUp 1s ease-out 0.3s both;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border-radius: 25px;
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        animation: fadeInUp 1s ease-out 0.3s both;
       }
 
       .url-input-container {
-          position: relative;
-          margin-bottom: 1.5rem;
+        position: relative;
+        margin-bottom: 1.5rem;
       }
 
       .url-input {
-          width: 100%;
-          padding: 1.2rem 1.5rem;
-          font-size: 1.1rem;
-          border: 2px solid rgba(255,255,255,0.3);
-          border-radius: 15px;
-          background: rgba(255,255,255,0.1);
-          color: white;
-          backdrop-filter: blur(10px);
-          transition: all 0.3s ease;
-          outline: none;
-          font-family: 'Courier New', monospace;
+        width: 100%;
+        padding: 1.2rem 1.5rem;
+        font-size: 1.1rem;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 15px;
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+        outline: none;
+        font-family: "Courier New", monospace;
       }
 
       .url-input::placeholder {
-          color: rgba(255,255,255,0.7);
+        color: rgba(255, 255, 255, 0.7);
       }
 
       .url-input:focus {
-          border-color: #4ecdc4;
-          box-shadow: 0 0 30px rgba(78, 205, 196, 0.3);
-          transform: translateY(-2px);
+        border-color: #4ecdc4;
+        box-shadow: 0 0 30px rgba(78, 205, 196, 0.3);
+        transform: translateY(-2px);
       }
 
       .load-btn {
-          width: 100%;
-          padding: 1.2rem;
-          font-size: 1.2rem;
-          font-weight: 600;
-          border: none;
-          border-radius: 15px;
-          background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-          color: white;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          text-transform: uppercase;
-          letter-spacing: 1px;
+        width: 100%;
+        padding: 1.2rem;
+        font-size: 1.2rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 15px;
+        background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
       }
 
       .load-btn:hover {
-          transform: translateY(-3px);
-          box-shadow: 0 15px 40px rgba(255, 107, 107, 0.4);
+        transform: translateY(-3px);
+        box-shadow: 0 15px 40px rgba(255, 107, 107, 0.4);
       }
 
       .load-btn:active {
-          transform: translateY(-1px);
+        transform: translateY(-1px);
       }
 
       .viewer-section {
-          background: rgba(255,255,255,0.05);
-          backdrop-filter: blur(20px);
-          border-radius: 25px;
-          padding: 2rem;
-          border: 1px solid rgba(255,255,255,0.1);
-          box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-          min-height: 600px;
-          position: relative;
-          overflow: hidden;
-          animation: fadeInUp 1s ease-out 0.6s both;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+        border-radius: 25px;
+        padding: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        min-height: 600px;
+        position: relative;
+        overflow: hidden;
+        animation: fadeInUp 1s ease-out 0.6s both;
       }
 
       .controls {
-          display: flex;
-          justify-content: center;
-          gap: 1rem;
-          margin-bottom: 1.5rem;
-          flex-wrap: wrap;
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
       }
 
       .control-btn {
-          padding: 0.8rem 1.5rem;
-          border: none;
-          border-radius: 12px;
-          background: rgba(255,255,255,0.15);
-          color: white;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          font-weight: 500;
-          backdrop-filter: blur(10px);
-          border: 1px solid rgba(255,255,255,0.2);
+        padding: 0.8rem 1.5rem;
+        border: none;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.15);
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
       }
 
       .control-btn:hover {
-          background: rgba(255,255,255,0.25);
-          transform: translateY(-2px);
-          box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        background: rgba(255, 255, 255, 0.25);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
       }
 
       .zoom-info {
-          text-align: center;
-          color: rgba(255,255,255,0.8);
-          margin-bottom: 1rem;
-          font-size: 1.1rem;
-          font-weight: 500;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 1rem;
+        font-size: 1.1rem;
+        font-weight: 500;
       }
 
       .image-container {
-          width: 100%;
-          height: 500px;
-          border-radius: 15px;
-          overflow: auto;
-          position: relative;
-          background: rgba(0,0,0,0.3);
-          border: 2px solid rgba(255,255,255,0.1);
-          cursor: grab;
-          display: flex;
-          align-items: center;
-          justify-content: center;
+        width: 100%;
+        height: 500px;
+        border-radius: 15px;
+        overflow: auto;
+        position: relative;
+        background: rgba(0, 0, 0, 0.3);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        cursor: grab;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       .image-container:active {
-          cursor: grabbing;
+        cursor: grabbing;
       }
 
       .zoomable-image {
-          max-width: none;
-          max-height: none;
-          transition: transform 0.3s ease;
-          user-select: none;
-          -webkit-user-drag: none;
-          display: block;
+        max-width: none;
+        max-height: none;
+        transition: transform 0.3s ease;
+        user-select: none;
+        -webkit-user-drag: none;
+        display: block;
       }
 
       .placeholder {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          height: 100%;
-          color: rgba(255,255,255,0.6);
-          font-size: 1.2rem;
-          text-align: center;
-          flex-direction: column;
-          gap: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 1.2rem;
+        text-align: center;
+        flex-direction: column;
+        gap: 1rem;
       }
 
       .placeholder-icon {
-          font-size: 4rem;
-          opacity: 0.5;
+        font-size: 4rem;
+        opacity: 0.5;
       }
 
       .loading {
-          display: none;
-          align-items: center;
-          justify-content: center;
-          height: 100%;
-          flex-direction: column;
-          gap: 1rem;
-          color: rgba(255,255,255,0.8);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        flex-direction: column;
+        gap: 1rem;
+        color: rgba(255, 255, 255, 0.8);
       }
 
       .loading-status {
-          font-size: 1rem;
-          text-align: center;
-          margin-top: 0.5rem;
-          opacity: 0.7;
+        font-size: 1rem;
+        text-align: center;
+        margin-top: 0.5rem;
+        opacity: 0.7;
       }
 
       .spinner {
-          width: 50px;
-          height: 50px;
-          border: 4px solid rgba(255,255,255,0.3);
-          border-top: 4px solid #4ecdc4;
-          border-radius: 50%;
-          animation: spin 1s linear infinite;
+        width: 50px;
+        height: 50px;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-top: 4px solid #4ecdc4;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
       }
 
       .error {
-          display: none;
-          align-items: center;
-          justify-content: center;
-          height: 100%;
-          color: #ff6b6b;
-          font-size: 1.1rem;
-          text-align: center;
-          flex-direction: column;
-          gap: 1rem;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        color: #ff6b6b;
+        font-size: 1.1rem;
+        text-align: center;
+        flex-direction: column;
+        gap: 1rem;
       }
 
       @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
       }
 
       @keyframes fadeInDown {
-          from {
-              opacity: 0;
-              transform: translateY(-50px);
-          }
-          to {
-              opacity: 1;
-              transform: translateY(0);
-          }
+        from {
+          opacity: 0;
+          transform: translateY(-50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
 
       @keyframes fadeInUp {
-          from {
-              opacity: 0;
-              transform: translateY(50px);
-          }
-          to {
-              opacity: 1;
-              transform: translateY(0);
-          }
+        from {
+          opacity: 0;
+          transform: translateY(50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
 
       @keyframes gradientShift {
-          0%, 100% {
-              background-position: 0% 50%;
-          }
-          50% {
-              background-position: 100% 50%;
-          }
+        0%,
+        100% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
       }
 
       .features {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-          gap: 2rem;
-          margin-top: 3rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
       }
 
       .feature-card {
-          background: rgba(255,255,255,0.1);
-          backdrop-filter: blur(20px);
-          border-radius: 20px;
-          padding: 2rem;
-          border: 1px solid rgba(255,255,255,0.2);
-          text-align: center;
-          color: white;
-          transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        text-align: center;
+        color: white;
+        transition: all 0.3s ease;
       }
 
       .feature-card:hover {
-          transform: translateY(-10px);
-          box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        transform: translateY(-10px);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
       }
 
       .feature-icon {
-          font-size: 3rem;
-          margin-bottom: 1rem;
-          display: block;
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        display: block;
       }
 
       .control-btn.favorite {
-          background: linear-gradient(45deg, #ff6b6b, #ffa500);
-          color: white;
-          font-weight: 600;
+        background: linear-gradient(45deg, #ff6b6b, #ffa500);
+        color: white;
+        font-weight: 600;
       }
 
       .control-btn.favorite:hover {
-          background: linear-gradient(45deg, #ff5252, #ff9800);
+        background: linear-gradient(45deg, #ff5252, #ff9800);
       }
 
       .favorites-modal {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: rgba(0,0,0,0.8);
-          backdrop-filter: blur(10px);
-          display: none;
-          align-items: center;
-          justify-content: center;
-          z-index: 1000;
-          animation: fadeIn 0.3s ease;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(10px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        animation: fadeIn 0.3s ease;
       }
 
       .favorites-content {
-          background: rgba(255,255,255,0.1);
-          backdrop-filter: blur(20px);
-          border-radius: 25px;
-          padding: 2rem;
-          max-width: 90vw;
-          max-height: 80vh;
-          overflow-y: auto;
-          border: 1px solid rgba(255,255,255,0.2);
-          box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-          position: relative;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border-radius: 25px;
+        padding: 2rem;
+        max-width: 90vw;
+        max-height: 80vh;
+        overflow-y: auto;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        position: relative;
       }
 
       .favorites-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 2rem;
-          padding-bottom: 1rem;
-          border-bottom: 1px solid rgba(255,255,255,0.2);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
       }
 
       .favorites-title {
-          font-size: 2rem;
-          font-weight: 700;
-          color: white;
-          margin: 0;
+        font-size: 2rem;
+        font-weight: 700;
+        color: white;
+        margin: 0;
       }
 
       .close-btn {
-          background: rgba(255,255,255,0.2);
-          border: none;
-          border-radius: 50%;
-          width: 40px;
-          height: 40px;
-          color: white;
-          cursor: pointer;
-          font-size: 1.5rem;
-          transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        color: white;
+        cursor: pointer;
+        font-size: 1.5rem;
+        transition: all 0.3s ease;
       }
 
       .close-btn:hover {
-          background: rgba(255,255,255,0.3);
-          transform: rotate(90deg);
+        background: rgba(255, 255, 255, 0.3);
+        transform: rotate(90deg);
       }
 
       .favorites-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-          gap: 1.5rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
       }
 
       .favorite-item {
-          background: rgba(255,255,255,0.1);
-          backdrop-filter: blur(10px);
-          border-radius: 15px;
-          padding: 1rem;
-          border: 1px solid rgba(255,255,255,0.2);
-          transition: all 0.3s ease;
-          cursor: pointer;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+        cursor: pointer;
       }
 
       .favorite-item:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-          background: rgba(255,255,255,0.15);
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        background: rgba(255, 255, 255, 0.15);
       }
 
       .favorite-preview {
-          width: 100%;
-          height: 150px;
-          border-radius: 10px;
-          object-fit: cover;
-          margin-bottom: 1rem;
-          border: 1px solid rgba(255,255,255,0.1);
+        width: 100%;
+        height: 150px;
+        border-radius: 10px;
+        object-fit: cover;
+        margin-bottom: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
       }
 
       .favorite-info {
-          color: white;
+        color: white;
       }
 
       .favorite-url {
-          font-size: 0.9rem;
-          opacity: 0.8;
-          word-break: break-all;
-          margin-bottom: 0.5rem;
-          line-height: 1.3;
+        font-size: 0.9rem;
+        opacity: 0.8;
+        word-break: break-all;
+        margin-bottom: 0.5rem;
+        line-height: 1.3;
       }
 
       .favorite-date {
-          font-size: 0.8rem;
-          opacity: 0.6;
-          margin-bottom: 1rem;
+        font-size: 0.8rem;
+        opacity: 0.6;
+        margin-bottom: 1rem;
       }
 
       .favorite-actions {
-          display: flex;
-          gap: 0.5rem;
+        display: flex;
+        gap: 0.5rem;
       }
 
       .action-btn {
-          padding: 0.5rem 1rem;
-          border: none;
-          border-radius: 8px;
-          cursor: pointer;
-          font-size: 0.8rem;
-          transition: all 0.3s ease;
-          font-weight: 500;
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        transition: all 0.3s ease;
+        font-weight: 500;
       }
 
       .load-favorite-btn {
-          background: linear-gradient(45deg, #4ecdc4, #44a08d);
-          color: white;
-          flex: 1;
+        background: linear-gradient(45deg, #4ecdc4, #44a08d);
+        color: white;
+        flex: 1;
       }
 
       .load-favorite-btn:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 5px 15px rgba(78, 205, 196, 0.4);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(78, 205, 196, 0.4);
       }
 
       .delete-favorite-btn {
-          background: linear-gradient(45deg, #ff6b6b, #ee5a52);
-          color: white;
-          padding: 0.5rem;
+        background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+        color: white;
+        padding: 0.5rem;
       }
 
       .delete-favorite-btn:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
       }
 
       .no-favorites {
-          text-align: center;
-          color: rgba(255,255,255,0.6);
-          font-size: 1.2rem;
-          padding: 3rem 1rem;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 1.2rem;
+        padding: 3rem 1rem;
       }
 
       .no-favorites-icon {
-          font-size: 4rem;
-          margin-bottom: 1rem;
-          display: block;
-          opacity: 0.3;
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        display: block;
+        opacity: 0.3;
       }
 
       @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
       }
-          .header h1 {
-              font-size: 2.5rem;
-          }
+      .header h1 {
+        font-size: 2.5rem;
+      }
 
-          .header p {
-              font-size: 1.2rem;
-          }
+      .header p {
+        font-size: 1.2rem;
+      }
 
-          .container {
-              padding: 1rem;
-          }
+      .container {
+        padding: 1rem;
+      }
 
-          .input-section, .viewer-section {
-              padding: 1.5rem;
-          }
+      .input-section,
+      .viewer-section {
+        padding: 1.5rem;
+      }
+      .mobile-fullscreen {
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100vw !important;
+        height: 100vh !important;
+        background: rgba(0, 0, 0, 0.95);
+        z-index: 9999;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
       }
     </style>
   </head>
   <body>
     <div class="container">
       <div class="header">
-        <h1>Ultra Image Zoomer Pro</h1>
+        <h1>VisionX Ultra Pro</h1>
         <p>Professional image zooming with pixel-perfect clarity</p>
       </div>
 
@@ -1208,15 +1235,64 @@
       function toggleFullscreen() {
         const container = document.getElementById("imageContainer");
 
-        if (!document.fullscreenElement) {
-          container.requestFullscreen().catch((err) => {
-            console.log("Fullscreen not supported");
-          });
+        // Try standard and vendor-prefixed fullscreen APIs
+        if (
+          !document.fullscreenElement &&
+          !document.webkitFullscreenElement &&
+          !document.msFullscreenElement
+        ) {
+          if (container.requestFullscreen) {
+            container
+              .requestFullscreen()
+              .catch(() => fallbackFullscreen(container));
+          } else if (container.webkitRequestFullscreen) {
+            container.webkitRequestFullscreen();
+          } else if (container.msRequestFullscreen) {
+            container.msRequestFullscreen();
+          } else {
+            fallbackFullscreen(container);
+          }
         } else {
-          document.exitFullscreen();
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+          } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+          } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+          } else {
+            fallbackExitFullscreen(container);
+          }
         }
       }
 
+      // Fallback for mobile browsers that don't support fullscreen API
+      function fallbackFullscreen(container) {
+        container.classList.add("mobile-fullscreen");
+        document.body.style.overflow = "hidden";
+      }
+
+      // Remove fallback fullscreen
+      function fallbackExitFullscreen(container) {
+        container.classList.remove("mobile-fullscreen");
+        document.body.style.overflow = "";
+      }
+
+      // Listen for fullscreen change to remove fallback if needed
+      document.addEventListener("fullscreenchange", () => {
+        if (!document.fullscreenElement) {
+          fallbackExitFullscreen(document.getElementById("imageContainer"));
+        }
+      });
+      document.addEventListener("webkitfullscreenchange", () => {
+        if (!document.webkitFullscreenElement) {
+          fallbackExitFullscreen(document.getElementById("imageContainer"));
+        }
+      });
+      document.addEventListener("msfullscreenchange", () => {
+        if (!document.msFullscreenElement) {
+          fallbackExitFullscreen(document.getElementById("imageContainer"));
+        }
+      });
       function showLoading() {
         hideAllStates();
         document.getElementById("loading").style.display = "flex";
