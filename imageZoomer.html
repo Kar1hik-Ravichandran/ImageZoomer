@@ -3,1364 +3,310 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>VisionX Ultra Pro</title>
+    <title>Ultra-Zoom Image Viewer 📸</title>
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+      :root {
+        --primary: #4caf50;
+        --danger: #ff6347;
+        --bg-light: #f7f9fc;
+        --bg-dark: #121212;
+        --card-light: rgba(255, 255, 255, 0.75);
+        --card-dark: rgba(40, 40, 40, 0.85);
+        --text-light: #000;
+        --text-dark: #fff;
       }
 
       body {
-        font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        margin: 0;
+        font-family: "Segoe UI", sans-serif;
+        background: var(--bg-light);
+        color: var(--text-light);
+        display: flex;
+        justify-content: center;
+        align-items: center;
         min-height: 100vh;
-        overflow-x: hidden;
+        transition: background 0.3s, color 0.3s;
+      }
+
+      .dark-mode {
+        background: var(--bg-dark);
+        color: var(--text-dark);
       }
 
       .container {
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 2rem;
-      }
-
-      .header {
+        backdrop-filter: blur(16px) saturate(180%);
+        -webkit-backdrop-filter: blur(16px) saturate(180%);
+        background-color: var(--card-light);
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
         text-align: center;
-        margin-bottom: 3rem;
-        animation: fadeInDown 1s ease-out;
+        width: 90%;
+        max-width: 700px;
+        transition: background-color 0.3s;
       }
 
-      .header h1 {
-        font-size: 4rem;
-        font-weight: 800;
-        background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
-        background-size: 300% 300%;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        animation: gradientShift 3s ease infinite;
-        margin-bottom: 1rem;
-        text-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      .dark-mode .container {
+        background-color: var(--card-dark);
       }
 
-      .header p {
-        font-size: 1.5rem;
-        color: rgba(255, 255, 255, 0.9);
-        font-weight: 300;
-        letter-spacing: 0.5px;
+      h1 {
+        font-size: 36px;
+        margin-bottom: 20px;
       }
 
-      .input-section {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(20px);
-        border-radius: 25px;
-        padding: 2.5rem;
-        margin-bottom: 2rem;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-        animation: fadeInUp 1s ease-out 0.3s both;
-      }
-
-      .url-input-container {
-        position: relative;
-        margin-bottom: 1.5rem;
-      }
-
-      .url-input {
-        width: 100%;
-        padding: 1.2rem 1.5rem;
-        font-size: 1.1rem;
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        border-radius: 15px;
-        background: rgba(255, 255, 255, 0.1);
-        color: white;
-        backdrop-filter: blur(10px);
-        transition: all 0.3s ease;
-        outline: none;
-        font-family: "Courier New", monospace;
-      }
-
-      .url-input::placeholder {
-        color: rgba(255, 255, 255, 0.7);
-      }
-
-      .url-input:focus {
-        border-color: #4ecdc4;
-        box-shadow: 0 0 30px rgba(78, 205, 196, 0.3);
-        transform: translateY(-2px);
-      }
-
-      .load-btn {
-        width: 100%;
-        padding: 1.2rem;
-        font-size: 1.2rem;
-        font-weight: 600;
-        border: none;
-        border-radius: 15px;
-        background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-        color: white;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-      }
-
-      .load-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 15px 40px rgba(255, 107, 107, 0.4);
-      }
-
-      .load-btn:active {
-        transform: translateY(-1px);
-      }
-
-      .viewer-section {
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(20px);
-        border-radius: 25px;
-        padding: 2rem;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-        min-height: 600px;
-        position: relative;
-        overflow: hidden;
-        animation: fadeInUp 1s ease-out 0.6s both;
-      }
-
-      .controls {
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-        margin-bottom: 1.5rem;
-        flex-wrap: wrap;
-      }
-
-      .control-btn {
-        padding: 0.8rem 1.5rem;
-        border: none;
+      input {
+        padding: 15px;
+        width: 70%;
         border-radius: 12px;
-        background: rgba(255, 255, 255, 0.15);
+        border: 2px solid #ccc;
+        font-size: 18px;
+        margin-bottom: 20px;
+        outline: none;
+        transition: border 0.2s;
+      }
+
+      input:focus {
+        border-color: var(--primary);
+      }
+
+      button {
+        padding: 12px 25px;
+        background-color: var(--primary);
         color: white;
+        font-size: 18px;
+        border-radius: 12px;
+        border: none;
         cursor: pointer;
-        transition: all 0.3s ease;
-        font-weight: 500;
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        margin-left: 10px;
+        transition: background-color 0.2s;
       }
 
-      .control-btn:hover {
-        background: rgba(255, 255, 255, 0.25);
-        transform: translateY(-2px);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-      }
-
-      .zoom-info {
-        text-align: center;
-        color: rgba(255, 255, 255, 0.8);
-        margin-bottom: 1rem;
-        font-size: 1.1rem;
-        font-weight: 500;
+      button:hover {
+        background-color: #388e3c;
       }
 
       .image-container {
-        width: 100%;
-        height: 500px;
-        border-radius: 15px;
-        overflow: auto;
-        position: relative;
-        background: rgba(0, 0, 0, 0.3);
-        border: 2px solid rgba(255, 255, 255, 0.1);
-        cursor: grab;
+        margin-top: 25px;
         display: flex;
-        align-items: center;
         justify-content: center;
-      }
-
-      .image-container:active {
-        cursor: grabbing;
-      }
-
-      .zoomable-image {
-        max-width: none;
-        max-height: none;
-        transition: transform 0.3s ease;
-        user-select: none;
-        -webkit-user-drag: none;
-        display: block;
-      }
-
-      .placeholder {
-        display: flex;
         align-items: center;
-        justify-content: center;
-        height: 100%;
-        color: rgba(255, 255, 255, 0.6);
-        font-size: 1.2rem;
-        text-align: center;
-        flex-direction: column;
-        gap: 1rem;
       }
 
-      .placeholder-icon {
-        font-size: 4rem;
-        opacity: 0.5;
+      #image {
+        max-width: 100%;
+        max-height: 80vh;
+        cursor: zoom-in;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s ease;
       }
 
-      .loading {
-        display: none;
-        align-items: center;
-        justify-content: center;
-        height: 100%;
-        flex-direction: column;
-        gap: 1rem;
-        color: rgba(255, 255, 255, 0.8);
-      }
-
-      .loading-status {
-        font-size: 1rem;
-        text-align: center;
-        margin-top: 0.5rem;
-        opacity: 0.7;
-      }
-
-      .spinner {
-        width: 50px;
-        height: 50px;
-        border: 4px solid rgba(255, 255, 255, 0.3);
-        border-top: 4px solid #4ecdc4;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-      }
-
-      .error {
-        display: none;
-        align-items: center;
-        justify-content: center;
-        height: 100%;
-        color: #ff6b6b;
-        font-size: 1.1rem;
-        text-align: center;
-        flex-direction: column;
-        gap: 1rem;
-      }
-
-      @keyframes spin {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-
-      @keyframes fadeInDown {
-        from {
-          opacity: 0;
-          transform: translateY(-50px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      @keyframes fadeInUp {
-        from {
-          opacity: 0;
-          transform: translateY(50px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      @keyframes gradientShift {
-        0%,
-        100% {
-          background-position: 0% 50%;
-        }
-        50% {
-          background-position: 100% 50%;
-        }
-      }
-
-      .features {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 2rem;
-        margin-top: 3rem;
-      }
-
-      .feature-card {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(20px);
-        border-radius: 20px;
-        padding: 2rem;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        text-align: center;
-        color: white;
-        transition: all 0.3s ease;
-      }
-
-      .feature-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-      }
-
-      .feature-icon {
-        font-size: 3rem;
-        margin-bottom: 1rem;
-        display: block;
-      }
-
-      .control-btn.favorite {
-        background: linear-gradient(45deg, #ff6b6b, #ffa500);
-        color: white;
-        font-weight: 600;
-      }
-
-      .control-btn.favorite:hover {
-        background: linear-gradient(45deg, #ff5252, #ff9800);
-      }
-
-      .favorites-modal {
+      .image-fullscreen {
         position: fixed;
         top: 0;
         left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: #000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+      }
+
+      .fullscreen-image-container {
         width: 100%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.8);
-        backdrop-filter: blur(10px);
-        display: none;
-        align-items: center;
-        justify-content: center;
-        z-index: 1000;
-        animation: fadeIn 0.3s ease;
-      }
-
-      .favorites-content {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(20px);
-        border-radius: 25px;
-        padding: 2rem;
-        max-width: 90vw;
-        max-height: 80vh;
-        overflow-y: auto;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         position: relative;
+        cursor: grab;
       }
 
-      .favorites-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 2rem;
-        padding-bottom: 1rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      .fullscreen-image-container:active {
+        cursor: grabbing;
       }
 
-      .favorites-title {
-        font-size: 2rem;
-        font-weight: 700;
+      .fullscreen-image {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        max-width: none;
+        max-height: none;
+        transform: translate(-50%, -50%) scale(1);
+        transition: transform 0.3s ease;
+        user-select: none;
+        pointer-events: none;
+      }
+
+      .back-btn {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        padding: 10px 20px;
+        background-color: var(--danger);
         color: white;
-        margin: 0;
-      }
-
-      .close-btn {
-        background: rgba(255, 255, 255, 0.2);
+        font-size: 16px;
         border: none;
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        color: white;
-        cursor: pointer;
-        font-size: 1.5rem;
-        transition: all 0.3s ease;
-      }
-
-      .close-btn:hover {
-        background: rgba(255, 255, 255, 0.3);
-        transform: rotate(90deg);
-      }
-
-      .favorites-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 1.5rem;
-      }
-
-      .favorite-item {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        border-radius: 15px;
-        padding: 1rem;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        transition: all 0.3s ease;
-        cursor: pointer;
-      }
-
-      .favorite-item:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-        background: rgba(255, 255, 255, 0.15);
-      }
-
-      .favorite-preview {
-        width: 100%;
-        height: 150px;
         border-radius: 10px;
-        object-fit: cover;
-        margin-bottom: 1rem;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-      }
-
-      .favorite-info {
-        color: white;
-      }
-
-      .favorite-url {
-        font-size: 0.9rem;
-        opacity: 0.8;
-        word-break: break-all;
-        margin-bottom: 0.5rem;
-        line-height: 1.3;
-      }
-
-      .favorite-date {
-        font-size: 0.8rem;
-        opacity: 0.6;
-        margin-bottom: 1rem;
-      }
-
-      .favorite-actions {
-        display: flex;
-        gap: 0.5rem;
-      }
-
-      .action-btn {
-        padding: 0.5rem 1rem;
-        border: none;
-        border-radius: 8px;
+        z-index: 10000;
         cursor: pointer;
-        font-size: 0.8rem;
-        transition: all 0.3s ease;
-        font-weight: 500;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
       }
 
-      .load-favorite-btn {
-        background: linear-gradient(45deg, #4ecdc4, #44a08d);
+      .theme-toggle {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        padding: 10px 20px;
+        background-color: #333;
         color: white;
-        flex: 1;
+        border-radius: 10px;
+        font-size: 14px;
+        cursor: pointer;
+        border: none;
       }
 
-      .load-favorite-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(78, 205, 196, 0.4);
-      }
-
-      .delete-favorite-btn {
-        background: linear-gradient(45deg, #ff6b6b, #ee5a52);
-        color: white;
-        padding: 0.5rem;
-      }
-
-      .delete-favorite-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
-      }
-
-      .no-favorites {
-        text-align: center;
-        color: rgba(255, 255, 255, 0.6);
-        font-size: 1.2rem;
-        padding: 3rem 1rem;
-      }
-
-      .no-favorites-icon {
-        font-size: 4rem;
-        margin-bottom: 1rem;
-        display: block;
-        opacity: 0.3;
-      }
-
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-        }
-        to {
-          opacity: 1;
-        }
-      }
-      .header h1 {
-        font-size: 2.5rem;
-      }
-
-      .header p {
-        font-size: 1.2rem;
-      }
-
-      .container {
-        padding: 1rem;
-      }
-
-      .input-section,
-      .viewer-section {
-        padding: 1.5rem;
-      }
-      .mobile-fullscreen {
-        position: fixed !important;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        width: 100vw !important;
-        height: 100vh !important;
-        background: rgba(0, 0, 0, 0.95);
-        z-index: 9999;
-        border-radius: 0 !important;
-        box-shadow: none !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
+      .loading-text {
+        margin-top: 15px;
+        font-style: italic;
+        color: #999;
       }
     </style>
   </head>
   <body>
+    <button class="theme-toggle" onclick="toggleTheme()">
+      🌓 Toggle Theme
+    </button>
+
     <div class="container">
-      <div class="header">
-        <h1>VisionX Ultra Pro</h1>
-        <p>Professional image zooming with pixel-perfect clarity</p>
-      </div>
-
-      <div class="input-section">
-        <div class="url-input-container">
-          <input
-            type="url"
-            class="url-input"
-            id="imageUrl"
-            placeholder="Enter image URL (JPG, PNG, GIF, WebP, SVG...)"
-          />
-        </div>
-        <button class="load-btn" onclick="loadImage()">
-          Load & Explore Image
-        </button>
-      </div>
-
-      <div class="viewer-section">
-        <div class="controls">
-          <button class="control-btn" onclick="zoomIn()">🔍 Zoom In</button>
-          <button class="control-btn" onclick="zoomOut()">🔍 Zoom Out</button>
-          <button class="control-btn" onclick="resetZoom()">🎯 Reset</button>
-          <button class="control-btn" onclick="fitToScreen()">
-            📱 Fit Screen
-          </button>
-          <button
-            class="control-btn"
-            id="favoriteBtn"
-            onclick="toggleFavorite()"
-          >
-            ⭐ Add to Favorites
-          </button>
-          <button class="control-btn" onclick="showFavorites()">
-            📂 My Favorites
-          </button>
-          <button class="control-btn" onclick="toggleFullscreen()">
-            ⛶ Fullscreen
-          </button>
-        </div>
-
-        <div class="zoom-info" id="zoomInfo">Zoom: 100%</div>
-
-        <div class="image-container" id="imageContainer">
-          <div class="placeholder" id="placeholder">
-            <div class="placeholder-icon">🖼️</div>
-            <div>Enter an image URL above to start zooming</div>
-          </div>
-
-          <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <div>Loading image...</div>
-            <div class="loading-status" id="loadingStatus">
-              Trying direct connection...
-            </div>
-          </div>
-
-          <div class="error" id="error">
-            <div>❌</div>
-            <div>Failed to load image. Please check the URL and try again.</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Favorites Modal -->
-      <div class="favorites-modal" id="favoritesModal">
-        <div class="favorites-content">
-          <div class="favorites-header">
-            <h2 class="favorites-title">My Favorite Images</h2>
-            <button class="close-btn" onclick="hideFavorites()">×</button>
-          </div>
-          <div id="favoritesContainer">
-            <!-- Favorites will be populated here -->
-          </div>
-        </div>
-      </div>
-
-      <div class="features">
-        <div class="feature-card">
-          <div class="feature-icon">🔬</div>
-          <h3>Ultra Precision Zoom</h3>
-          <p>Zoom up to 1000x while maintaining crystal clear image quality</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">🌐</div>
-          <h3>Universal Support</h3>
-          <p>Works with any image URL - JPG, PNG, GIF, WebP, SVG and more</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">⚡</div>
-          <h3>Smooth Performance</h3>
-          <p>Optimized rendering for buttery smooth zooming and panning</p>
-        </div>
-      </div>
+      <h1>Ultra-Zoom Image Viewer 📸</h1>
+      <p>Enter an image URL to explore it in detail:</p>
+      <input
+        type="text"
+        id="imageUrl"
+        placeholder="https://example.com/image.jpg"
+      />
+      <button id="loadImageBtn">Load</button>
+      <div id="loadingText" class="loading-text"></div>
+      <div id="imageContainer" class="image-container"></div>
     </div>
 
     <script>
-      let currentZoom = 1;
-      let imageElement = null;
-      let isDragging = false;
-      let startX, startY, scrollLeft, scrollTop;
-      let maxZoom = 10;
-      let currentImageUrl = "";
-      let favorites = [];
+      const loadBtn = document.getElementById("loadImageBtn");
+      const imageContainer = document.getElementById("imageContainer");
+      const loadingText = document.getElementById("loadingText");
 
-      // Load favorites from storage on page load
-      function loadFavoritesFromStorage() {
-        const stored = localStorage.getItem("imageZoomerFavorites");
-        if (stored) {
-          try {
-            favorites = JSON.parse(stored);
-          } catch (e) {
-            favorites = [];
-          }
-        }
-      }
-
-      // Save favorites to storage
-      function saveFavoritesToStorage() {
-        localStorage.setItem("imageZoomerFavorites", JSON.stringify(favorites));
-      }
-
-      // Check if current image is favorited
-      function isCurrentImageFavorited() {
-        return favorites.some((fav) => fav.url === currentImageUrl);
-      }
-
-      // Update favorite button appearance
-      function updateFavoriteButton() {
-        const btn = document.getElementById("favoriteBtn");
-        if (!currentImageUrl) {
-          btn.style.display = "none";
+      loadBtn.addEventListener("click", () => {
+        const imageUrl = document.getElementById("imageUrl").value.trim();
+        if (!imageUrl) {
+          alert("Please enter an image URL!");
           return;
         }
 
-        btn.style.display = "inline-block";
+        loadingText.textContent = "Loading image...";
+        const img = new Image();
+        img.id = "image";
+        img.src = imageUrl;
+        img.alt = "Zoomable Image";
 
-        if (isCurrentImageFavorited()) {
-          btn.textContent = "⭐ Favorited";
-          btn.classList.add("favorite");
-        } else {
-          btn.textContent = "⭐ Add to Favorites";
-          btn.classList.remove("favorite");
-        }
-      }
+        img.onload = () => {
+          loadingText.textContent = "";
+          imageContainer.innerHTML = "";
+          img.addEventListener("click", () => openFullScreen(img));
+          imageContainer.appendChild(img);
+        };
 
-      // Toggle favorite status
-      function toggleFavorite() {
-        if (!currentImageUrl) {
-          alert("No image loaded to favorite!");
-          return;
-        }
+        img.onerror = () => {
+          loadingText.textContent = "";
+          alert("Failed to load image. Please check the URL.");
+        };
+      });
 
-        if (isCurrentImageFavorited()) {
-          // Remove from favorites
-          favorites = favorites.filter((fav) => fav.url !== currentImageUrl);
-          showNotification("Removed from favorites", "💔");
-        } else {
-          // Add to favorites
-          const favorite = {
-            url: currentImageUrl,
-            dateAdded: new Date().toISOString(),
-            preview: imageElement ? getImagePreview() : null,
-          };
-          favorites.unshift(favorite); // Add to beginning
-          showNotification("Added to favorites!", "⭐");
-        }
+      function openFullScreen(img) {
+        const fullscreenContainer = document.createElement("div");
+        fullscreenContainer.classList.add("image-fullscreen");
 
-        saveFavoritesToStorage();
-        updateFavoriteButton();
-      }
+        const backBtn = document.createElement("button");
+        backBtn.className = "back-btn";
+        backBtn.textContent = "Close";
+        backBtn.onclick = () => document.body.removeChild(fullscreenContainer);
 
-      // Get image preview (thumbnail)
-      function getImagePreview() {
-        if (!imageElement) return null;
+        const wrapper = document.createElement("div");
+        wrapper.className = "fullscreen-image-container";
 
-        try {
-          const canvas = document.createElement("canvas");
-          const ctx = canvas.getContext("2d");
-          const maxSize = 300;
+        const fullscreenImg = document.createElement("img");
+        fullscreenImg.className = "fullscreen-image";
+        fullscreenImg.src = img.src;
 
-          const { width, height } = imageElement.getBoundingClientRect();
-          const scale = Math.min(maxSize / width, maxSize / height);
+        wrapper.appendChild(fullscreenImg);
+        fullscreenContainer.appendChild(backBtn);
+        fullscreenContainer.appendChild(wrapper);
+        document.body.appendChild(fullscreenContainer);
 
-          canvas.width = width * scale;
-          canvas.height = height * scale;
+        let isZoomed = false,
+          isDragging = false;
+        let startX = 0,
+          startY = 0;
+        let offsetX = 0,
+          offsetY = 0,
+          moved = false;
 
-          ctx.drawImage(imageElement, 0, 0, canvas.width, canvas.height);
-          return canvas.toDataURL("image/jpeg", 0.7);
-        } catch (e) {
-          return null;
-        }
-      }
-
-      // Show notification
-      function showNotification(message, icon = "✅") {
-        const notification = document.createElement("div");
-        notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: rgba(0,0,0,0.9);
-                color: white;
-                padding: 1rem 1.5rem;
-                border-radius: 10px;
-                font-weight: 500;
-                z-index: 10000;
-                animation: slideInRight 0.3s ease;
-                backdrop-filter: blur(10px);
-                border: 1px solid rgba(255,255,255,0.2);
-            `;
-        notification.innerHTML = `${icon} ${message}`;
-
-        document.body.appendChild(notification);
-
-        setTimeout(() => {
-          notification.style.animation = "slideOutRight 0.3s ease";
-          setTimeout(() => notification.remove(), 300);
-        }, 2500);
-      }
-
-      // Show favorites modal
-      function showFavorites() {
-        renderFavorites();
-        document.getElementById("favoritesModal").style.display = "flex";
-        document.body.style.overflow = "hidden";
-      }
-
-      // Hide favorites modal
-      function hideFavorites() {
-        document.getElementById("favoritesModal").style.display = "none";
-        document.body.style.overflow = "auto";
-      }
-
-      // Render favorites in modal
-      function renderFavorites() {
-        const container = document.getElementById("favoritesContainer");
-
-        if (favorites.length === 0) {
-          container.innerHTML = `
-                    <div class="no-favorites">
-                        <div class="no-favorites-icon">📂</div>
-                        <div>No favorite images yet</div>
-                        <div style="font-size: 1rem; margin-top: 0.5rem; opacity: 0.7;">
-                            Load an image and click "Add to Favorites" to start collecting!
-                        </div>
-                    </div>
-                `;
-          return;
-        }
-
-        const favoritesHtml = favorites
-          .map((fav, index) => {
-            const date = new Date(fav.dateAdded).toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-              hour: "2-digit",
-              minute: "2-digit",
-            });
-
-            return `
-                    <div class="favorite-item">
-                        ${
-                          fav.preview
-                            ? `<img src="${fav.preview}" class="favorite-preview" alt="Preview">`
-                            : `<div class="favorite-preview" style="background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.5);">🖼️</div>`
-                        }
-                        <div class="favorite-info">
-                            <div class="favorite-url">${fav.url}</div>
-                            <div class="favorite-date">Added: ${date}</div>
-                            <div class="favorite-actions">
-                                <button class="action-btn load-favorite-btn" onclick="loadFavoriteImage('${
-                                  fav.url
-                                }')">
-                                    Load Image
-                                </button>
-                                <button class="action-btn delete-favorite-btn" onclick="deleteFavorite(${index})" title="Delete">
-                                    🗑️
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-          })
-          .join("");
-
-        container.innerHTML = `<div class="favorites-grid">${favoritesHtml}</div>`;
-      }
-
-      // Load favorite image
-      function loadFavoriteImage(url) {
-        document.getElementById("imageUrl").value = url;
-        hideFavorites();
-        loadImage();
-      }
-
-      // Delete favorite
-      function deleteFavorite(index) {
-        if (
-          confirm("Are you sure you want to remove this image from favorites?")
-        ) {
-          const deletedFav = favorites[index];
-          favorites.splice(index, 1);
-          saveFavoritesToStorage();
-          renderFavorites();
-
-          // Update favorite button if we deleted the current image
-          if (deletedFav.url === currentImageUrl) {
-            updateFavoriteButton();
-          }
-
-          showNotification("Removed from favorites", "🗑️");
-        }
-      }
-
-      function loadImage() {
-        const url = document.getElementById("imageUrl").value.trim();
-
-        if (!url) {
-          alert("Please enter an image URL");
-          return;
-        }
-
-        showLoading();
-
-        // Try multiple loading methods for maximum compatibility
-        loadImageWithFallback(url);
-      }
-
-      function loadImageWithFallback(url) {
-        updateLoadingStatus("Trying direct connection...");
-
-        // Method 1: Direct image loading (fastest, works for most URLs)
-        loadImageDirect(url)
-          .then((img) => {
-            displayImage(img);
-            hideLoading();
-          })
-          .catch(() => {
-            updateLoadingStatus("Trying CORS proxy...");
-            // Method 2: Try with CORS proxy for restricted URLs
-            loadImageWithProxy(url)
-              .then((img) => {
-                displayImage(img);
-                hideLoading();
-              })
-              .catch(() => {
-                updateLoadingStatus("Trying alternative methods...");
-                // Method 3: Try loading as background image (for some protected URLs)
-                loadImageAsBackground(url)
-                  .then((img) => {
-                    displayImage(img);
-                    hideLoading();
-                  })
-                  .catch(() => {
-                    updateLoadingStatus("Final attempt...");
-                    // Method 4: Final fallback - create image element directly
-                    loadImageFinalFallback(url)
-                      .then((img) => {
-                        displayImage(img);
-                        hideLoading();
-                      })
-                      .catch(() => {
-                        showError();
-                        hideLoading();
-                      });
-                  });
-              });
-          });
-      }
-
-      function updateLoadingStatus(status) {
-        const statusElement = document.getElementById("loadingStatus");
-        if (statusElement) {
-          statusElement.textContent = status;
-        }
-      }
-
-      function loadImageDirect(url) {
-        return new Promise((resolve, reject) => {
-          const img = new Image();
-
-          // Try different CORS modes
-          img.crossOrigin = "anonymous";
-
-          img.onload = () => resolve(img);
-          img.onerror = () => {
-            // Try without CORS
-            const img2 = new Image();
-            img2.onload = () => resolve(img2);
-            img2.onerror = () => reject();
-
-            // Add cache busting
-            const separator = url.includes("?") ? "&" : "?";
-            img2.src =
-              url + separator + "_t=" + Date.now() + "&_r=" + Math.random();
-          };
-
-          // Add cache busting and try to load
-          const separator = url.includes("?") ? "&" : "?";
-          img.src = url + separator + "_t=" + Date.now();
+        wrapper.addEventListener("mousedown", (e) => {
+          if (!isZoomed) return;
+          isDragging = true;
+          moved = false;
+          startX = e.clientX;
+          startY = e.clientY;
         });
-      }
 
-      function loadImageWithProxy(url) {
-        return new Promise((resolve, reject) => {
-          // Try multiple CORS proxy services
-          const proxies = [
-            `https://cors-anywhere.herokuapp.com/${url}`,
-            `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-            `https://corsproxy.io/?${encodeURIComponent(url)}`,
-            `https://cors.bridged.cc/${url}`,
-          ];
-
-          let proxyIndex = 0;
-
-          function tryNextProxy() {
-            if (proxyIndex >= proxies.length) {
-              reject();
-              return;
-            }
-
-            const img = new Image();
-            img.crossOrigin = "anonymous";
-
-            img.onload = () => resolve(img);
-            img.onerror = () => {
-              proxyIndex++;
-              tryNextProxy();
-            };
-
-            img.src = proxies[proxyIndex];
-          }
-
-          tryNextProxy();
+        wrapper.addEventListener("mousemove", (e) => {
+          if (!isZoomed || !isDragging) return;
+          moved = true;
+          offsetX += e.clientX - startX;
+          offsetY += e.clientY - startY;
+          fullscreenImg.style.transform = `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px)) scale(5)`;
+          startX = e.clientX;
+          startY = e.clientY;
         });
-      }
 
-      function loadImageAsBackground(url) {
-        return new Promise((resolve, reject) => {
-          // Create a temporary div to test if image loads as background
-          const testDiv = document.createElement("div");
-          testDiv.style.cssText = `
-                    position: absolute;
-                    top: -9999px;
-                    width: 100px;
-                    height: 100px;
-                    background-image: url('${url}');
-                    background-size: contain;
-                    background-repeat: no-repeat;
-                `;
+        wrapper.addEventListener("mouseup", () => (isDragging = false));
+        wrapper.addEventListener("mouseleave", () => (isDragging = false));
 
-          document.body.appendChild(testDiv);
-
-          // Wait a bit to see if background image loads
-          setTimeout(() => {
-            const computedStyle = window.getComputedStyle(testDiv);
-            const backgroundImage = computedStyle.backgroundImage;
-
-            document.body.removeChild(testDiv);
-
-            if (backgroundImage && backgroundImage !== "none") {
-              // Create image element with the URL that worked
-              const img = new Image();
-              img.onload = () => resolve(img);
-              img.onerror = () => reject();
-              img.src = url;
-            } else {
-              reject();
-            }
-          }, 1000);
-        });
-      }
-
-      function loadImageFinalFallback(url) {
-        return new Promise((resolve, reject) => {
-          // Last resort: try different URL formats and parameters
-          const variations = [
-            url,
-            url.replace(/^http:/, "https:"),
-            url.replace(/^https:/, "http:"),
-            url + "?raw=true",
-            url + "?dl=1",
-            url.replace("www.dropbox.com", "dl.dropboxusercontent.com"),
-            url.replace("/view?", "/preview?"),
-            url
-              .replace("drive.google.com/file/d/", "drive.google.com/uc?id=")
-              .replace("/view?usp=sharing", ""),
-          ];
-
-          let variationIndex = 0;
-
-          function tryNextVariation() {
-            if (variationIndex >= variations.length) {
-              reject();
-              return;
-            }
-
-            const img = new Image();
-
-            img.onload = () => resolve(img);
-            img.onerror = () => {
-              variationIndex++;
-              tryNextVariation();
-            };
-
-            // Try without any CORS restrictions
-            img.src = variations[variationIndex];
-          }
-
-          tryNextVariation();
-        });
-      }
-
-      function displayImage(img) {
-        const container = document.getElementById("imageContainer");
-
-        // Remove existing image
-        const existingImg = container.querySelector(".zoomable-image");
-        if (existingImg) {
-          existingImg.remove();
-        }
-
-        // Clone and setup the image
-        const newImg = img.cloneNode();
-        newImg.className = "zoomable-image";
-        newImg.style.display = "block";
-
-        container.appendChild(newImg);
-        imageElement = newImg;
-
-        // Set current image URL
-        currentImageUrl = document.getElementById("imageUrl").value.trim();
-
-        // Reset zoom and fit to screen
-        currentZoom = 1;
-        fitToScreen();
-
-        // Setup dragging
-        setupDragging();
-
-        // Update favorite button
-        updateFavoriteButton();
-
-        hideAllStates();
-      }
-
-      function setupDragging() {
-        const container = document.getElementById("imageContainer");
-
-        container.addEventListener("mousedown", startDrag);
-        container.addEventListener("mousemove", drag);
-        container.addEventListener("mouseup", stopDrag);
-        container.addEventListener("mouseleave", stopDrag);
-
-        // Touch events for mobile
-        container.addEventListener("touchstart", handleTouch);
-        container.addEventListener("touchmove", handleTouch);
-        container.addEventListener("touchend", stopDrag);
-
-        // Wheel zoom
-        container.addEventListener("wheel", handleWheel);
-      }
-
-      function startDrag(e) {
-        if (!imageElement) return;
-        isDragging = true;
-        const container = document.getElementById("imageContainer");
-        startX = e.pageX - container.offsetLeft;
-        startY = e.pageY - container.offsetTop;
-        scrollLeft = container.scrollLeft;
-        scrollTop = container.scrollTop;
-      }
-
-      function drag(e) {
-        if (!isDragging || !imageElement) return;
-        e.preventDefault();
-        const container = document.getElementById("imageContainer");
-        const x = e.pageX - container.offsetLeft;
-        const y = e.pageY - container.offsetTop;
-        const walkX = (x - startX) * 2;
-        const walkY = (y - startY) * 2;
-        container.scrollLeft = scrollLeft - walkX;
-        container.scrollTop = scrollTop - walkY;
-      }
-
-      function stopDrag() {
-        isDragging = false;
-      }
-
-      function handleTouch(e) {
-        if (e.type === "touchstart") {
+        wrapper.addEventListener("touchstart", (e) => {
+          if (!isZoomed) return;
+          isDragging = true;
           const touch = e.touches[0];
-          startDrag({ pageX: touch.pageX, pageY: touch.pageY });
-        } else if (e.type === "touchmove") {
-          e.preventDefault();
+          startX = touch.clientX;
+          startY = touch.clientY;
+        });
+
+        wrapper.addEventListener("touchmove", (e) => {
+          if (!isZoomed || !isDragging) return;
           const touch = e.touches[0];
-          drag({
-            pageX: touch.pageX,
-            pageY: touch.pageY,
-            preventDefault: () => {},
-          });
-        }
-      }
-
-      function handleWheel(e) {
-        if (!imageElement) return;
-        e.preventDefault();
-
-        if (e.deltaY < 0) {
-          zoomIn();
-        } else {
-          zoomOut();
-        }
-      }
-
-      function zoomIn() {
-        if (!imageElement || currentZoom >= maxZoom) return;
-        currentZoom = Math.min(currentZoom * 1.25, maxZoom);
-        updateZoom();
-      }
-
-      function zoomOut() {
-        if (!imageElement || currentZoom <= 0.1) return;
-        currentZoom = Math.max(currentZoom / 1.25, 0.1);
-        updateZoom();
-      }
-
-      function resetZoom() {
-        if (!imageElement) return;
-        currentZoom = 1;
-        updateZoom();
-      }
-
-      function fitToScreen() {
-        if (!imageElement) return;
-
-        const container = document.getElementById("imageContainer");
-
-        // Get container dimensions
-        const containerWidth = container.clientWidth;
-        const containerHeight = container.clientHeight;
-
-        // Get image natural dimensions
-        const imgWidth = imageElement.naturalWidth;
-        const imgHeight = imageElement.naturalHeight;
-
-        // Calculate scale to fit with padding
-        const padding = 40;
-        const scaleX = (containerWidth - padding) / imgWidth;
-        const scaleY = (containerHeight - padding) / imgHeight;
-        currentZoom = Math.min(scaleX, scaleY, 1);
-
-        // Apply zoom
-        updateZoom();
-
-        // Reset scroll position to center
-        container.scrollLeft = 0;
-        container.scrollTop = 0;
-
-        // Center the image after zoom is applied
-        setTimeout(() => {
-          const scaledWidth = imgWidth * currentZoom;
-          const scaledHeight = imgHeight * currentZoom;
-
-          // Calculate center position
-          const centerX = Math.max(0, (scaledWidth - containerWidth) / 2);
-          const centerY = Math.max(0, (scaledHeight - containerHeight) / 2);
-
-          container.scrollLeft = centerX;
-          container.scrollTop = centerY;
-        }, 50);
-      }
-
-      function updateZoom() {
-        if (!imageElement) return;
-
-        const container = document.getElementById("imageContainer");
-        const transform = `scale(${currentZoom})`;
-        imageElement.style.transform = transform;
-        imageElement.style.transformOrigin = "center center";
-
-        // Adjust container overflow based on zoom level
-        if (currentZoom <= 1) {
-          container.style.overflow = "hidden";
-          container.style.alignItems = "center";
-          container.style.justifyContent = "center";
-        } else {
-          container.style.overflow = "auto";
-          container.style.alignItems = "flex-start";
-          container.style.justifyContent = "flex-start";
-        }
-
-        // Update zoom info
-        document.getElementById("zoomInfo").textContent = `Zoom: ${Math.round(
-          currentZoom * 100
-        )}%`;
-      }
-
-      function toggleFullscreen() {
-        const container = document.getElementById("imageContainer");
-
-        // Try standard and vendor-prefixed fullscreen APIs
-        if (
-          !document.fullscreenElement &&
-          !document.webkitFullscreenElement &&
-          !document.msFullscreenElement
-        ) {
-          if (container.requestFullscreen) {
-            container
-              .requestFullscreen()
-              .catch(() => fallbackFullscreen(container));
-          } else if (container.webkitRequestFullscreen) {
-            container.webkitRequestFullscreen();
-          } else if (container.msRequestFullscreen) {
-            container.msRequestFullscreen();
-          } else {
-            fallbackFullscreen(container);
-          }
-        } else {
-          if (document.exitFullscreen) {
-            document.exitFullscreen();
-          } else if (document.webkitExitFullscreen) {
-            document.webkitExitFullscreen();
-          } else if (document.msExitFullscreen) {
-            document.msExitFullscreen();
-          } else {
-            fallbackExitFullscreen(container);
-          }
-        }
-      }
-
-      // Fallback for mobile browsers that don't support fullscreen API
-      function fallbackFullscreen(container) {
-        container.classList.add("mobile-fullscreen");
-        document.body.style.overflow = "hidden";
-      }
-
-      // Remove fallback fullscreen
-      function fallbackExitFullscreen(container) {
-        container.classList.remove("mobile-fullscreen");
-        document.body.style.overflow = "";
-      }
-
-      // Listen for fullscreen change to remove fallback if needed
-      document.addEventListener("fullscreenchange", () => {
-        if (!document.fullscreenElement) {
-          fallbackExitFullscreen(document.getElementById("imageContainer"));
-        }
-      });
-      document.addEventListener("webkitfullscreenchange", () => {
-        if (!document.webkitFullscreenElement) {
-          fallbackExitFullscreen(document.getElementById("imageContainer"));
-        }
-      });
-      document.addEventListener("msfullscreenchange", () => {
-        if (!document.msFullscreenElement) {
-          fallbackExitFullscreen(document.getElementById("imageContainer"));
-        }
-      });
-      function showLoading() {
-        hideAllStates();
-        document.getElementById("loading").style.display = "flex";
-      }
-
-      function showError() {
-        hideAllStates();
-        document.getElementById("error").style.display = "flex";
-      }
-
-      function hideLoading() {
-        document.getElementById("loading").style.display = "none";
-      }
-
-      function hideAllStates() {
-        document.getElementById("placeholder").style.display = "none";
-        document.getElementById("loading").style.display = "none";
-        document.getElementById("error").style.display = "none";
-      }
-
-      // Load image on Enter key
-      document
-        .getElementById("imageUrl")
-        .addEventListener("keypress", function (e) {
-          if (e.key === "Enter") {
-            loadImage();
-          }
+          offsetX += touch.clientX - startX;
+          offsetY += touch.clientY - startY;
+          fullscreenImg.style.transform = `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px)) scale(5)`;
+          startX = touch.clientX;
+          startY = touch.clientY;
         });
 
-      // Sample URLs for testing
-      const sampleUrls = [
-        "https://picsum.photos/2000/1500",
-        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4",
-        "https://picsum.photos/3000/2000",
-      ];
+        wrapper.addEventListener("touchend", () => (isDragging = false));
 
-      // Initialize on page load
-      window.addEventListener("load", () => {
-        document.getElementById("imageUrl").placeholder =
-          "Enter ANY image URL: Direct links, Google Drive, Dropbox, Instagram, etc.";
-
-        // Load favorites from storage
-        loadFavoritesFromStorage();
-        updateFavoriteButton();
-      });
-
-      // Close modal when clicking outside
-      document
-        .getElementById("favoritesModal")
-        .addEventListener("click", function (e) {
-          if (e.target === this) {
-            hideFavorites();
+        wrapper.addEventListener("click", () => {
+          if (moved) return;
+          isZoomed = !isZoomed;
+          if (isZoomed) {
+            offsetX = offsetY = 0;
+            fullscreenImg.style.transform = `translate(-50%, -50%) scale(5)`;
+          } else {
+            fullscreenImg.style.transform = `translate(-50%, -50%) scale(1)`;
           }
         });
+      }
 
-      // Add notification animations
-      const style = document.createElement("style");
-      style.textContent = `
-            @keyframes slideInRight {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-            }
-            @keyframes slideOutRight {
-                from { transform: translateX(0); opacity: 1; }
-                to { transform: translateX(100%); opacity: 0; }
-            }
-        `;
-      document.head.appendChild(style);
+      function toggleTheme() {
+        document.body.classList.toggle("dark-mode");
+      }
     </script>
   </body>
 </html>
