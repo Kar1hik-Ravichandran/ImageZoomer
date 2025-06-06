@@ -186,8 +186,9 @@
       }
 
       .fullscreen-toggle {
+        position: absolute;
         top: 15px;
-        left: 1839px;
+        right: 15px;
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
         background: var(--panel-bg);
@@ -497,8 +498,8 @@
 
       .favorites-toggle {
         position: absolute;
-        top: 900px;
-        left: 1839px;
+        top: 15px;
+        left: 15px;
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
         background: var(--panel-bg);
@@ -579,66 +580,56 @@
           width: 100%;
         }
 
-        .controls {
-          top: 10px;
-          left: 60px;
-          gap: 6px;
-          padding: 6px;
+        .viewer-container {
+          align-items: flex-start;
+          justify-content: flex-start;
         }
 
-        .controls button {
-          padding: 10px 12px;
-          font-size: 16px;
-          min-width: 40px;
+        .controls {
+          top: 10px;
+          left: 10px;
+          right: auto;
+          flex-direction: row;
+          gap: 6px;
+          padding: 6px;
+          z-index: 20;
         }
 
         .fullscreen-toggle {
           top: 10px;
           right: 10px;
+          left: auto;
           padding: 6px;
-        }
-
-        .fullscreen-toggle button {
-          padding: 10px 12px;
-          font-size: 18px;
-        }
-
-        .zoom-indicator {
-          bottom: 10px;
-          left: 10px;
-          padding: 8px 12px;
-          font-size: 12px;
-        }
-
-        .keyboard-shortcuts {
-          display: none;
-        }
-
-        .favorites-panel {
-          width: 100%;
-          left: -100%;
+          z-index: 22;
         }
 
         .favorites-toggle {
           top: 10px;
-          left: 10px;
+          right: 75px; /* Leave space for fullscreen button */
+          left: auto;
           padding: 6px;
-        }
-
-        .favorites-toggle button {
-          padding: 10px 12px;
-          font-size: 16px;
+          z-index: 22;
         }
 
         .add-favorite-btn {
-          bottom: 60px;
+          top: 100px;
           left: 10px;
+          right: auto;
+          bottom: auto;
           padding: 6px;
+          z-index: 20;
         }
 
-        .add-favorite-btn button {
-          padding: 10px 12px;
-          font-size: 14px;
+        .zoom-indicator {
+          top: 650px; /* Place below the top buttons */
+          left: auto;
+          right: 10px;
+          bottom: auto;
+          padding: 8px 12px;
+          font-size: 12px;
+          z-index: 30; /* Make sure it's above the image */
+          background: var(--panel-bg);
+          border-radius: var(--border-radius);
         }
       }
 
