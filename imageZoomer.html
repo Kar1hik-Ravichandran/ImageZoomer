@@ -154,15 +154,30 @@
         font-size: 11px;
       }
 
-      .viewer:fullscreen {
+      .viewer:fullscreen,
+      .viewer.simulated-fullscreen {
         height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        z-index: 9999;
       }
 
-      .viewer:fullscreen .controls {
+      .viewer:fullscreen .controls,
+      .viewer.simulated-fullscreen .controls {
         position: fixed;
         top: 20px;
         right: 20px;
-        z-index: 1000;
+        z-index: 10000;
+      }
+
+      body.fullscreen-active {
+        overflow: hidden;
+      }
+
+      body.fullscreen-active header {
+        display: none;
       }
 
       @media (max-width: 768px) {
@@ -303,16 +318,74 @@
         }
 
         async toggleFullscreen() {
+          const viewer = document.querySelector(".viewer");
+
           try {
-            if (!document.fullscreenElement) {
-              const viewer = document.querySelector(".viewer");
-              await viewer.requestFullscreen();
+            if (
+              !document.fullscreenElement &&
+              !document.webkitFullscreenElement &&
+              !document.mozFullScreenElement
+            ) {
+              // Try different fullscreen methods for cross-browser compatibility
+              if (viewer.requestFullscreen) {
+                await viewer.requestFullscreen();
+              } else if (viewer.webkitRequestFullscreen) {
+                await viewer.webkitRequestFullscreen();
+              } else if (viewer.mozRequestFullScreen) {
+                await viewer.mozRequestFullScreen();
+              } else if (viewer.msRequestFullscreen) {
+                await viewer.msRequestFullscreen();
+              } else {
+                // Fallback for mobile - simulate fullscreen
+                this.simulateFullscreen();
+              }
             } else {
-              await document.exitFullscreen();
+              // Exit fullscreen
+              if (document.exitFullscreen) {
+                await document.exitFullscreen();
+              } else if (document.webkitExitFullscreen) {
+                await document.webkitExitFullscreen();
+              } else if (document.mozCancelFullScreen) {
+                await document.mozCancelFullScreen();
+              } else if (document.msExitFullscreen) {
+                await document.msExitFullscreen();
+              } else {
+                this.exitSimulatedFullscreen();
+              }
             }
           } catch (err) {
-            this.showMessage("Fullscreen not supported");
+            // Fallback to simulated fullscreen on mobile
+            if (this.isMobile()) {
+              this.simulateFullscreen();
+            } else {
+              this.showMessage("Fullscreen not available");
+            }
           }
+        }
+
+        isMobile() {
+          return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+            navigator.userAgent
+          );
+        }
+
+        simulateFullscreen() {
+          const viewer = document.querySelector(".viewer");
+          viewer.classList.add("simulated-fullscreen");
+          document.body.classList.add("fullscreen-active");
+
+          // Hide address bar on mobile
+          if (this.isMobile()) {
+            setTimeout(() => {
+              window.scrollTo(0, 1);
+            }, 100);
+          }
+        }
+
+        exitSimulatedFullscreen() {
+          const viewer = document.querySelector(".viewer");
+          viewer.classList.remove("simulated-fullscreen");
+          document.body.classList.remove("fullscreen-active");
         }
 
         bindEvents() {
@@ -422,6 +495,17 @@
               case "F":
                 e.preventDefault();
                 this.toggleFullscreen();
+                break;
+              case "Escape":
+                if (
+                  document.fullscreenElement ||
+                  document
+                    .querySelector(".viewer")
+                    .classList.contains("simulated-fullscreen")
+                ) {
+                  e.preventDefault();
+                  this.toggleFullscreen();
+                }
                 break;
               case "?":
                 e.preventDefault();
