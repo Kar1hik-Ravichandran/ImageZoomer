@@ -6,113 +6,63 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
-    <title>Ultra Image Zoom Viewer</title>
+    <title>Image Zoom Viewer</title>
     <style>
-      :root {
-        --bg-color: #0d0d0d;
-        --text-color: #fff;
-        --panel-bg: rgba(25, 25, 25, 0.85);
-        --button-bg: #444;
-        --button-hover: #555;
-        --input-bg: #222;
-        --border-radius: 10px;
-        --transition: all 0.2s ease;
-      }
-
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        -webkit-tap-highlight-color: transparent;
       }
 
-      html,
       body {
-        font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
-        background: var(--bg-color);
-        color: var(--text-color);
-        height: 100%;
+        font-family: "Segoe UI", sans-serif;
+        background: #0d0d0d;
+        color: white;
+        height: 100vh;
         overflow: hidden;
-        line-height: 1.4;
       }
 
       header {
+        background: rgba(25, 25, 25, 0.9);
         backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
-        background: var(--panel-bg);
         display: flex;
         padding: 12px;
-        align-items: center;
         gap: 12px;
-        flex-wrap: wrap;
-        z-index: 100;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       }
 
-      header input[type="text"],
-      header input[type="file"] {
+      header input {
         flex: 1;
-        min-width: 200px;
         padding: 14px 16px;
-        border-radius: var(--border-radius);
+        border-radius: 8px;
         border: 1px solid rgba(255, 255, 255, 0.1);
+        background: #222;
+        color: white;
         font-size: 16px;
-        background: var(--input-bg);
-        color: var(--text-color);
-        transition: var(--transition);
         outline: none;
       }
 
       header input:focus {
         border-color: rgba(255, 255, 255, 0.3);
-        box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
-      }
-
-      header input[type="file"] {
-        cursor: pointer;
-      }
-
-      header input[type="file"]::-webkit-file-upload-button {
-        background: var(--button-bg);
-        color: var(--text-color);
-        border: none;
-        padding: 8px 12px;
-        border-radius: 6px;
-        margin-right: 10px;
-        cursor: pointer;
-        transition: var(--transition);
-      }
-
-      header input[type="file"]::-webkit-file-upload-button:hover {
-        background: var(--button-hover);
       }
 
       header button {
         padding: 14px 24px;
-        background: var(--button-bg);
+        background: #444;
         border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: var(--border-radius);
-        color: var(--text-color);
-        font-weight: 600;
-        font-size: 16px;
+        border-radius: 8px;
+        color: white;
         cursor: pointer;
-        transition: var(--transition);
-        white-space: nowrap;
+        transition: all 0.2s ease;
       }
 
       header button:hover {
-        background: var(--button-hover);
-        border-color: rgba(255, 255, 255, 0.2);
+        background: #555;
       }
 
-      header button:active {
-        transform: translateY(1px);
-      }
-
-      .viewer-container {
+      .viewer {
         position: relative;
         background: #000;
-        flex: 1;
         height: calc(100vh - 76px);
         overflow: hidden;
         display: flex;
@@ -125,149 +75,40 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%) scale(1);
-        max-width: none;
-        max-height: none;
-        touch-action: none;
-        user-select: none;
         cursor: grab;
-        transition: opacity 0.3s ease;
-        image-rendering: -webkit-optimize-contrast;
-        image-rendering: crisp-edges;
+        user-select: none;
+        touch-action: none;
       }
 
       #zoom-img:active {
         cursor: grabbing;
       }
 
-      #zoom-img.loading {
-        opacity: 0.5;
-      }
-
-      .controls,
-      .fullscreen-toggle,
-      .zoom-indicator,
-      .fullscreen-close {
+      .controls {
         position: absolute;
+        top: 15px;
+        right: 15px;
+        display: flex;
+        gap: 10px;
         z-index: 10;
       }
 
-      .controls {
-        top: 15px;
-        left: 15px;
-        display: flex;
-        gap: 8px;
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        background: var(--panel-bg);
-        padding: 8px;
-        border-radius: var(--border-radius);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-      }
-
       .controls button {
-        font-size: 18px;
-        font-weight: bold;
-        padding: 12px 16px;
-        border-radius: 8px;
-        background: var(--button-bg);
-        color: var(--text-color);
+        padding: 10px 12px;
+        background: rgba(25, 25, 25, 0.9);
+        backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        color: white;
         cursor: pointer;
-        transition: var(--transition);
-        min-width: 44px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        font-size: 16px;
       }
 
       .controls button:hover {
-        background: var(--button-hover);
-        border-color: rgba(255, 255, 255, 0.2);
-      }
-
-      .fullscreen-toggle {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        background: var(--panel-bg);
-        padding: 8px;
-        border-radius: var(--border-radius);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-      }
-
-      .fullscreen-toggle button {
-        font-size: 20px;
-        padding: 12px 16px;
-        border-radius: 8px;
-        background: var(--button-bg);
-        color: var(--text-color);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        cursor: pointer;
-        transition: var(--transition);
-      }
-
-      .fullscreen-toggle button:hover {
-        background: var(--button-hover);
-        border-color: rgba(255, 255, 255, 0.2);
-      }
-
-      .zoom-indicator {
-        bottom: 15px;
-        left: 15px;
-        background: var(--panel-bg);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        padding: 12px 16px;
-        border-radius: var(--border-radius);
-        font-size: 14px;
-        font-weight: 500;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        font-family: "Courier New", monospace;
-      }
-
-      .fullscreen-close {
-        display: none;
-        top: 15px;
-        right: 15px;
-        z-index: 9999;
-      }
-
-      .fullscreen-close button {
-        padding: 12px 16px;
-        font-size: 20px;
-        background: rgba(0, 0, 0, 0.8);
-        color: var(--text-color);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: var(--border-radius);
-        cursor: pointer;
-        transition: var(--transition);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-      }
-
-      .fullscreen-close button:hover {
         background: rgba(255, 255, 255, 0.1);
       }
 
-      .loading-indicator {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: var(--text-color);
-        font-size: 16px;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        z-index: 5;
-      }
-
-      .loading-indicator.show {
-        opacity: 1;
-      }
-
-      .error-message {
+      .message {
         position: absolute;
         top: 50%;
         left: 50%;
@@ -275,774 +116,131 @@
         background: rgba(220, 38, 38, 0.9);
         color: white;
         padding: 16px 24px;
-        border-radius: var(--border-radius);
-        font-size: 14px;
+        border-radius: 8px;
         z-index: 20;
         opacity: 0;
         transition: opacity 0.3s ease;
-        max-width: 300px;
-        text-align: center;
       }
 
-      .error-message.show {
+      .message.show {
         opacity: 1;
       }
 
-      body.fullscreen-active header,
-      body.fullscreen-active .controls,
-      body.fullscreen-active .zoom-indicator,
-      body.fullscreen-active .fullscreen-toggle {
-        display: none;
-      }
-
-      body.fullscreen-active .fullscreen-close {
-        display: block;
-      }
-
-      body.fullscreen-active .viewer-container {
-        height: 100vh;
-      }
-
-      .keyboard-shortcuts {
+      .shortcuts {
         position: absolute;
         bottom: 15px;
         right: 15px;
-        background: var(--panel-bg);
+        background: rgba(25, 25, 25, 0.9);
         backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
         padding: 12px 16px;
-        border-radius: var(--border-radius);
+        border-radius: 8px;
         font-size: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
         opacity: 0;
         transition: opacity 0.3s ease;
-        max-width: 200px;
       }
 
-      .keyboard-shortcuts.show {
+      .shortcuts.show {
         opacity: 1;
       }
 
-      .keyboard-shortcuts h4 {
-        margin-bottom: 8px;
-        font-size: 13px;
-      }
-
-      .keyboard-shortcuts div {
+      .shortcuts div {
         margin-bottom: 4px;
       }
 
-      .keyboard-shortcuts kbd {
-        background: rgba(255, 255, 255, 0.1);
+      .shortcuts kbd {
+        background: rgba(255, 255, 255, 0.2);
         padding: 2px 6px;
         border-radius: 4px;
         font-size: 11px;
       }
 
-      .favorites-panel {
-        position: fixed;
-        top: 0;
-        left: -400px;
-        width: 380px;
+      .viewer:fullscreen {
         height: 100vh;
-        background: var(--panel-bg);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border-right: 1px solid rgba(255, 255, 255, 0.1);
-        transition: left 0.3s ease;
+      }
+
+      .viewer:fullscreen .controls {
+        position: fixed;
+        top: 20px;
+        right: 20px;
         z-index: 1000;
-        overflow-y: auto;
-      }
-
-      .favorites-panel.open {
-        left: 0;
-      }
-
-      .favorites-header {
-        padding: 20px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      .favorites-header h3 {
-        font-size: 18px;
-        font-weight: 600;
-      }
-
-      .close-favorites {
-        background: none;
-        border: none;
-        color: var(--text-color);
-        font-size: 24px;
-        cursor: pointer;
-        padding: 5px;
-        border-radius: 4px;
-        transition: var(--transition);
-      }
-
-      .close-favorites:hover {
-        background: rgba(255, 255, 255, 0.1);
-      }
-
-      .pin-input-container {
-        padding: 20px;
-        text-align: center;
-      }
-
-      .pin-input {
-        width: 150px;
-        padding: 12px;
-        font-size: 18px;
-        text-align: center;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: var(--border-radius);
-        background: var(--input-bg);
-        color: var(--text-color);
-        letter-spacing: 4px;
-      }
-
-      .pin-submit {
-        margin-top: 10px;
-        padding: 12px 24px;
-        background: var(--button-bg);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: var(--border-radius);
-        color: var(--text-color);
-        cursor: pointer;
-        transition: var(--transition);
-      }
-
-      .pin-submit:hover {
-        background: var(--button-hover);
-      }
-
-      .pin-error {
-        color: #ef4444;
-        margin-top: 10px;
-        font-size: 14px;
-      }
-
-      .favorites-content {
-        padding: 20px;
-      }
-
-      .favorite-item {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 12px;
-        margin-bottom: 12px;
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: var(--border-radius);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        cursor: pointer;
-        transition: var(--transition);
-      }
-
-      .favorite-item:hover {
-        background: rgba(255, 255, 255, 0.1);
-        border-color: rgba(255, 255, 255, 0.2);
-      }
-
-      .favorite-thumbnail {
-        width: 50px;
-        height: 50px;
-        object-fit: cover;
-        border-radius: 6px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-      }
-
-      .favorite-info {
-        flex: 1;
-        min-width: 0;
-      }
-
-      .favorite-name {
-        font-weight: 500;
-        margin-bottom: 4px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      .favorite-date {
-        font-size: 12px;
-        color: rgba(255, 255, 255, 0.6);
-      }
-
-      .favorite-actions {
-        display: flex;
-        gap: 8px;
-      }
-
-      .favorite-actions button {
-        padding: 6px 10px;
-        background: rgba(255, 255, 255, 0.1);
-        border: none;
-        border-radius: 4px;
-        color: var(--text-color);
-        cursor: pointer;
-        font-size: 12px;
-        transition: var(--transition);
-      }
-
-      .favorite-actions button:hover {
-        background: rgba(255, 255, 255, 0.2);
-      }
-
-      .favorite-actions .delete-btn:hover {
-        background: rgba(239, 68, 68, 0.3);
-      }
-
-      .favorites-toggle {
-        position: absolute;
-        top: 15px;
-        left: 15px;
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        background: var(--panel-bg);
-        padding: 8px;
-        border-radius: var(--border-radius);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        z-index: 15;
-      }
-
-      .favorites-toggle button {
-        font-size: 18px;
-        padding: 12px 16px;
-        border-radius: 8px;
-        background: var(--button-bg);
-        color: var(--text-color);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        cursor: pointer;
-        transition: var(--transition);
-      }
-
-      .favorites-toggle button:hover {
-        background: var(--button-hover);
-        border-color: rgba(255, 255, 255, 0.2);
-      }
-
-      .add-favorite-btn {
-        position: absolute;
-        bottom: 80px;
-        left: 15px;
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        background: var(--panel-bg);
-        padding: 8px;
-        border-radius: var(--border-radius);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        z-index: 15;
-      }
-
-      .add-favorite-btn button {
-        font-size: 16px;
-        padding: 12px 16px;
-        border-radius: 8px;
-        background: #059669;
-        color: var(--text-color);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        cursor: pointer;
-        transition: var(--transition);
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      .add-favorite-btn button:hover {
-        background: #047857;
-      }
-
-      .empty-favorites {
-        text-align: center;
-        padding: 40px 20px;
-        color: rgba(255, 255, 255, 0.6);
-      }
-
-      .empty-favorites h4 {
-        margin-bottom: 8px;
-        color: var(--text-color);
       }
 
       @media (max-width: 768px) {
         header {
           flex-direction: column;
-          padding: 10px;
-          gap: 10px;
-        }
-
-        header input[type="text"],
-        header input[type="file"] {
-          min-width: unset;
-          width: 100%;
-        }
-
-        .viewer-container {
-          align-items: flex-start;
-          justify-content: flex-start;
         }
 
         .controls {
-          top: 10px;
-          left: 10px;
-          right: auto;
-          flex-direction: row;
-          gap: 6px;
-          padding: 6px;
-          z-index: 20;
-        }
-
-        .fullscreen-toggle {
+          flex-direction: column;
           top: 10px;
           right: 10px;
-          left: auto;
-          padding: 6px;
-          z-index: 22;
-        }
-
-        .favorites-toggle {
-          top: 10px;
-          right: 75px; /* Leave space for fullscreen button */
-          left: auto;
-          padding: 6px;
-          z-index: 22;
-        }
-
-        .add-favorite-btn {
-          top: 100px;
-          left: 10px;
-          right: auto;
-          bottom: auto;
-          padding: 6px;
-          z-index: 20;
-        }
-
-        .zoom-indicator {
-          top: 650px; /* Place below the top buttons */
-          left: auto;
-          right: 10px;
-          bottom: auto;
-          padding: 8px 12px;
-          font-size: 12px;
-          z-index: 30; /* Make sure it's above the image */
-          background: var(--panel-bg);
-          border-radius: var(--border-radius);
-        }
-      }
-
-      @media (hover: none) and (pointer: coarse) {
-        #zoom-img {
-          cursor: default;
-        }
-
-        #zoom-img:active {
-          cursor: default;
         }
       }
     </style>
   </head>
-
   <body>
     <header>
-      <input type="text" id="image-url" placeholder="Paste any image URL..." />
+      <input type="text" id="image-url" placeholder="Paste image URL..." />
       <input type="file" id="file-input" accept="image/*" />
       <button onclick="app.loadImage()">Load URL</button>
     </header>
 
-    <div class="viewer-container" id="viewer">
-      <div class="favorites-toggle">
-        <button
-          onclick="app.toggleFavorites()"
-          title="Favorites (Ctrl+F)"
-          aria-label="Open Favorites"
-        >
-          ★
-        </button>
-      </div>
+    <div class="viewer">
       <div class="controls">
-        <button onclick="app.zoomIn()" title="Zoom In (+)" aria-label="Zoom In">
-          +
-        </button>
-        <button
-          onclick="app.zoomOut()"
-          title="Zoom Out (-)"
-          aria-label="Zoom Out"
-        >
-          −
-        </button>
-        <button
-          onclick="app.resetZoom()"
-          title="Reset Zoom (0)"
-          aria-label="Reset Zoom"
-        >
-          Reset
-        </button>
-      </div>
-      <div class="fullscreen-toggle">
-        <button
-          onclick="app.toggleFullscreen()"
-          title="Toggle Fullscreen (F)"
-          aria-label="Toggle Fullscreen"
-        >
+        <button onclick="app.toggleFullscreen()" title="Fullscreen (F)">
           ⛶
         </button>
+        <button onclick="app.resetZoom()" title="Reset (0)">↻</button>
       </div>
-      <div class="zoom-indicator" id="zoom-level">Zoom: 100%</div>
-      <div class="add-favorite-btn">
-        <button
-          onclick="app.addToFavorites()"
-          title="Add to Favorites"
-          aria-label="Add to Favorites"
-        >
-          <span>❤</span> Save
-        </button>
-      </div>
-      <div class="fullscreen-close">
-        <button
-          onclick="app.exitFullscreenAndReset()"
-          title="Exit Fullscreen (Esc)"
-          aria-label="Exit Fullscreen"
-        >
-          ✕
-        </button>
-      </div>
-      <div class="loading-indicator" id="loading-indicator">
-        Loading image...
-      </div>
-      <div class="error-message" id="error-message"></div>
-      <div class="keyboard-shortcuts" id="keyboard-shortcuts">
-        <h4>Shortcuts:</h4>
-        <div><kbd>+</kbd> Zoom in</div>
-        <div><kbd>-</kbd> Zoom out</div>
+
+      <div class="message" id="message"></div>
+
+      <div class="shortcuts" id="shortcuts">
+        <div><kbd>+/-</kbd> Zoom</div>
         <div><kbd>0</kbd> Reset</div>
         <div><kbd>F</kbd> Fullscreen</div>
-        <div><kbd>Ctrl+F</kbd> Favorites</div>
-        <div><kbd>?</kbd> Toggle help</div>
+        <div><kbd>?</kbd> Help</div>
       </div>
+
       <img
         id="zoom-img"
-        src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/5298bac0-b8bf-4c80-af67-725c1272dbb0/defibp5-8019b091-dae8-426d-8276-7b6d15afcce8.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzUyOThiYWMwLWI4YmYtNGM4MC1hZjY3LTcyNWMxMjcyZGJiMFwvZGVmaWJwNS04MDE5YjA5MS1kYWU4LTQyNmQtODI3Ni03YjZkMTVhZmNjZTguanBnIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.pojNP43h1WC_XSz5oyqkpLbNmCChKMYG38UqYi8b44o"
+        src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
         alt="Zoomable Image"
       />
     </div>
 
-    <!-- Favorites Panel -->
-    <div class="favorites-panel" id="favorites-panel">
-      <div class="favorites-header">
-        <h3>Favorites</h3>
-        <button
-          class="close-favorites"
-          onclick="app.closeFavorites()"
-          aria-label="Close Favorites"
-        >
-          ✕
-        </button>
-      </div>
-
-      <div id="pin-container" class="pin-input-container">
-        <div>
-          <input
-            type="password"
-            class="pin-input"
-            id="pin-input"
-            placeholder="PIN"
-            maxlength="4"
-          />
-        </div>
-        <div>
-          <button class="pin-submit" onclick="app.verifyPin()">Enter</button>
-        </div>
-        <div class="pin-error" id="pin-error"></div>
-      </div>
-
-      <div
-        id="favorites-content"
-        class="favorites-content"
-        style="display: none"
-      >
-        <div id="favorites-list"></div>
-      </div>
-    </div>
-
     <script>
-      class ZoomViewer {
+      class ImageViewer {
         constructor() {
           this.img = document.getElementById("zoom-img");
           this.input = document.getElementById("image-url");
-          this.zoomLevelText = document.getElementById("zoom-level");
           this.fileInput = document.getElementById("file-input");
-          this.loadingIndicator = document.getElementById("loading-indicator");
-          this.errorMessage = document.getElementById("error-message");
-          this.keyboardShortcuts =
-            document.getElementById("keyboard-shortcuts");
+          this.message = document.getElementById("message");
+          this.shortcuts = document.getElementById("shortcuts");
 
-          // Favorites elements
-          this.favoritesPanel = document.getElementById("favorites-panel");
-          this.pinContainer = document.getElementById("pin-container");
-          this.pinInput = document.getElementById("pin-input");
-          this.pinError = document.getElementById("pin-error");
-          this.favoritesContent = document.getElementById("favorites-content");
-          this.favoritesList = document.getElementById("favorites-list");
-
-          // State
-          this.isAuthenticated = false;
-          this.correctPin = "1234";
-          this.currentImageSrc = "";
-
-          // Zoom state
-          this.scale = this.getStoredScale();
+          this.scale = 1;
           this.minScale = 0.1;
-          this.maxScale = 20;
-          this.zoomStep = 0.2;
-
-          // Pan state
+          this.maxScale = 10;
           this.posX = 0;
           this.posY = 0;
-
-          // Drag state
           this.isDragging = false;
           this.lastX = 0;
           this.lastY = 0;
-
-          // Touch state
           this.lastTouchDistance = 0;
-          this.touchStartTime = 0;
 
           this.init();
         }
 
         init() {
-          this.setTransform();
           this.bindEvents();
-          this.hideError();
-          this.loadFavorites();
-          this.currentImageSrc = this.img.src;
-        }
-
-        getStoredScale() {
-          try {
-            return parseFloat(localStorage.getItem("zoomScale")) || 1;
-          } catch (e) {
-            return 1;
-          }
-        }
-
-        // Favorites functionality
-        getFavorites() {
-          try {
-            const stored = localStorage.getItem("imageFavorites");
-            return stored ? JSON.parse(stored) : [];
-          } catch (e) {
-            return [];
-          }
-        }
-
-        saveFavorites(favorites) {
-          try {
-            localStorage.setItem("imageFavorites", JSON.stringify(favorites));
-          } catch (e) {
-            console.warn("Could not save favorites");
-          }
-        }
-
-        toggleFavorites() {
-          this.favoritesPanel.classList.toggle("open");
-          if (this.favoritesPanel.classList.contains("open")) {
-            this.resetAuthentication();
-            this.pinInput.focus();
-          }
-        }
-
-        closeFavorites() {
-          this.favoritesPanel.classList.remove("open");
-          this.resetAuthentication();
-        }
-
-        resetAuthentication() {
-          this.isAuthenticated = false;
-          this.pinContainer.style.display = "block";
-          this.favoritesContent.style.display = "none";
-          this.pinInput.value = "";
-          this.clearPinError();
-        }
-
-        verifyPin() {
-          const enteredPin = this.pinInput.value.trim();
-
-          if (enteredPin === this.correctPin) {
-            this.isAuthenticated = true;
-            this.pinContainer.style.display = "none";
-            this.favoritesContent.style.display = "block";
-            this.loadFavorites();
-            this.clearPinError();
-          } else {
-            this.showPinError("Incorrect PIN. Try again.");
-            this.pinInput.value = "";
-            this.pinInput.focus();
-          }
-        }
-
-        showPinError(message) {
-          this.pinError.textContent = message;
-          this.pinError.style.display = "block";
-          setTimeout(() => this.clearPinError(), 3000);
-        }
-
-        clearPinError() {
-          this.pinError.textContent = "";
-          this.pinError.style.display = "none";
-        }
-
-        addToFavorites() {
-          if (!this.currentImageSrc) {
-            this.showError("No image loaded to add to favorites");
-            return;
-          }
-
-          const favorites = this.getFavorites();
-          const now = new Date();
-          const newFavorite = {
-            id: Date.now(),
-            src: this.currentImageSrc,
-            name: this.generateImageName(this.currentImageSrc),
-            dateAdded: now.toISOString(),
-            thumbnail: this.currentImageSrc,
-          };
-
-          // Check if already exists
-          const exists = favorites.some(
-            (fav) => fav.src === this.currentImageSrc
-          );
-          if (exists) {
-            this.showError("Image already in favorites");
-            return;
-          }
-
-          favorites.unshift(newFavorite);
-          this.saveFavorites(favorites);
-          this.showError("Added to favorites!"); // Using error div for success message
-
-          // If favorites panel is open and authenticated, refresh the list
-          if (
-            this.favoritesPanel.classList.contains("open") &&
-            this.isAuthenticated
-          ) {
-            this.loadFavorites();
-          }
-        }
-
-        generateImageName(src) {
-          if (src.includes("unsplash.com")) {
-            return "Unsplash Image";
-          } else if (src.includes("data:image")) {
-            return "Uploaded Image";
-          } else {
-            try {
-              const url = new URL(src);
-              const filename = url.pathname.split("/").pop();
-              return filename || "Web Image";
-            } catch (e) {
-              return "Image";
-            }
-          }
-        }
-
-        loadFavorites() {
-          if (!this.isAuthenticated) return;
-
-          const favorites = this.getFavorites();
-          this.renderFavorites(favorites);
-        }
-
-        renderFavorites(favorites) {
-          if (favorites.length === 0) {
-            this.favoritesList.innerHTML = `
-                        <div class="empty-favorites">
-                            <h4>No favorites yet</h4>
-                            <p>Add images to your favorites to see them here</p>
-                        </div>
-                    `;
-            return;
-          }
-
-          this.favoritesList.innerHTML = favorites
-            .map(
-              (fav) => `
-                    <div class="favorite-item" data-id="${fav.id}">
-                        <img src="${fav.thumbnail}" alt="${
-                fav.name
-              }" class="favorite-thumbnail" />
-                        <div class="favorite-info">
-                            <div class="favorite-name">${fav.name}</div>
-                            <div class="favorite-date">${new Date(
-                              fav.dateAdded
-                            ).toLocaleDateString()}</div>
-                        </div>
-                        <div class="favorite-actions">
-                            <button onclick="app.loadFavoriteImage('${
-                              fav.src
-                            }')" title="Load Image">Load</button>
-                            <button onclick="app.deleteFavorite(${
-                              fav.id
-                            })" class="delete-btn" title="Delete">Delete</button>
-                        </div>
-                    </div>
-                `
-            )
-            .join("");
-        }
-
-        loadFavoriteImage(src) {
-          this.showLoading();
-          this.img.src = src;
-          this.currentImageSrc = src;
-          this.resetZoom();
-          this.hideLoading();
-          this.closeFavorites();
-        }
-
-        deleteFavorite(id) {
-          if (confirm("Are you sure you want to delete this favorite?")) {
-            const favorites = this.getFavorites();
-            const updatedFavorites = favorites.filter((fav) => fav.id !== id);
-            this.saveFavorites(updatedFavorites);
-            this.loadFavorites();
-          }
-        }
-
-        setStoredScale(scale) {
-          try {
-            localStorage.setItem("zoomScale", scale.toString());
-          } catch (e) {
-            // localStorage not available, continue without saving
-          }
         }
 
         setTransform() {
-          requestAnimationFrame(() => {
-            this.img.style.transform = `translate(-50%, -50%) translate(${this.posX}px, ${this.posY}px) scale(${this.scale})`;
-            this.zoomLevelText.textContent = `Zoom: ${Math.round(
-              this.scale * 100
-            )}%`;
-            this.setStoredScale(this.scale);
-          });
+          this.img.style.transform = `translate(-50%, -50%) translate(${this.posX}px, ${this.posY}px) scale(${this.scale})`;
         }
 
-        clampScale(newScale) {
-          return Math.min(Math.max(newScale, this.minScale), this.maxScale);
-        }
-
-        zoomIn() {
-          this.scale = this.clampScale(this.scale + this.zoomStep);
-          this.setTransform();
-        }
-
-        zoomOut() {
-          this.scale = this.clampScale(this.scale - this.zoomStep);
-          this.setTransform();
+        clampScale(scale) {
+          return Math.min(Math.max(scale, this.minScale), this.maxScale);
         }
 
         resetZoom() {
@@ -1052,76 +250,49 @@
           this.setTransform();
         }
 
-        showLoading() {
-          this.loadingIndicator.classList.add("show");
-          this.img.classList.add("loading");
-        }
-
-        hideLoading() {
-          this.loadingIndicator.classList.remove("show");
-          this.img.classList.remove("loading");
-        }
-
-        showError(message) {
-          this.errorMessage.textContent = message;
-          this.errorMessage.classList.add("show");
-          setTimeout(() => this.hideError(), 3000);
-        }
-
-        hideError() {
-          this.errorMessage.classList.remove("show");
+        showMessage(text, isError = true) {
+          this.message.textContent = text;
+          this.message.style.background = isError
+            ? "rgba(220, 38, 38, 0.9)"
+            : "rgba(34, 197, 94, 0.9)";
+          this.message.classList.add("show");
+          setTimeout(() => this.message.classList.remove("show"), 3000);
         }
 
         loadImage() {
           const url = this.input.value.trim();
           if (!url) {
-            this.showError("Please enter a valid image URL");
+            this.showMessage("Please enter a valid image URL");
             return;
           }
 
-          this.showLoading();
-          this.hideError();
-
-          // Create a temporary image to test loading
           const testImg = new Image();
-
           testImg.onload = () => {
             this.img.src = url;
-            this.currentImageSrc = url;
             this.resetZoom();
-            this.hideLoading();
+            this.showMessage("Image loaded successfully!", false);
           };
-
           testImg.onerror = () => {
-            this.hideLoading();
-            this.showError("Failed to load image. Please check the URL.");
+            this.showMessage("Failed to load image. Check the URL.");
           };
-
           testImg.src = url;
         }
 
         loadFile(file) {
           if (!file || !file.type.startsWith("image/")) {
-            this.showError("Please select a valid image file");
+            this.showMessage("Please select a valid image file");
             return;
           }
-
-          this.showLoading();
-          this.hideError();
 
           const reader = new FileReader();
           reader.onload = (e) => {
             this.img.src = e.target.result;
-            this.currentImageSrc = e.target.result;
             this.resetZoom();
-            this.hideLoading();
+            this.showMessage("File loaded successfully!", false);
           };
-
           reader.onerror = () => {
-            this.hideLoading();
-            this.showError("Failed to read the file");
+            this.showMessage("Failed to read the file");
           };
-
           reader.readAsDataURL(file);
         }
 
@@ -1131,11 +302,23 @@
           return Math.sqrt(dx * dx + dy * dy);
         }
 
+        async toggleFullscreen() {
+          try {
+            if (!document.fullscreenElement) {
+              const viewer = document.querySelector(".viewer");
+              await viewer.requestFullscreen();
+            } else {
+              await document.exitFullscreen();
+            }
+          } catch (err) {
+            this.showMessage("Fullscreen not supported");
+          }
+        }
+
         bindEvents() {
           // File input
           this.fileInput.addEventListener("change", (e) => {
-            const file = e.target.files[0];
-            if (file) this.loadFile(file);
+            if (e.target.files[0]) this.loadFile(e.target.files[0]);
           });
 
           // Mouse events
@@ -1152,7 +335,6 @@
 
           window.addEventListener("mousemove", (e) => {
             if (!this.isDragging) return;
-
             this.posX += e.clientX - this.lastX;
             this.posY += e.clientY - this.lastY;
             this.lastX = e.clientX;
@@ -1176,8 +358,6 @@
           this.img.addEventListener(
             "touchstart",
             (e) => {
-              this.touchStartTime = Date.now();
-
               if (e.touches.length === 1) {
                 this.isDragging = true;
                 this.lastX = e.touches[0].clientX;
@@ -1194,7 +374,6 @@
             "touchmove",
             (e) => {
               e.preventDefault();
-
               if (e.touches.length === 1 && this.isDragging) {
                 this.posX += e.touches[0].clientX - this.lastX;
                 this.posY += e.touches[0].clientY - this.lastY;
@@ -1214,37 +393,9 @@
             { passive: false }
           );
 
-          this.img.addEventListener(
-            "touchend",
-            (e) => {
-              // Double tap to reset zoom
-              if (
-                e.touches.length === 0 &&
-                Date.now() - this.touchStartTime < 300
-              ) {
-                if (this.lastTapTime && Date.now() - this.lastTapTime < 300) {
-                  this.resetZoom();
-                }
-                this.lastTapTime = Date.now();
-              }
-
-              this.isDragging = false;
-              this.lastTouchDistance = 0;
-            },
-            { passive: true }
-          );
-
-          // PIN input events
-          this.pinInput.addEventListener("keydown", (e) => {
-            if (e.key === "Enter") {
-              this.verifyPin();
-            }
-          });
-
-          this.pinInput.addEventListener("input", (e) => {
-            // Only allow numbers
-            e.target.value = e.target.value.replace(/[^0-9]/g, "");
-            this.clearPinError();
+          this.img.addEventListener("touchend", () => {
+            this.isDragging = false;
+            this.lastTouchDistance = 0;
           });
 
           // Keyboard shortcuts
@@ -1255,11 +406,13 @@
               case "+":
               case "=":
                 e.preventDefault();
-                this.zoomIn();
+                this.scale = this.clampScale(this.scale + 0.2);
+                this.setTransform();
                 break;
               case "-":
                 e.preventDefault();
-                this.zoomOut();
+                this.scale = this.clampScale(this.scale - 0.2);
+                this.setTransform();
                 break;
               case "0":
                 e.preventDefault();
@@ -1267,93 +420,35 @@
                 break;
               case "f":
               case "F":
-                if (e.ctrlKey) {
-                  e.preventDefault();
-                  this.toggleFavorites();
-                } else {
-                  e.preventDefault();
-                  this.toggleFullscreen();
-                }
-                break;
-              case "Escape":
-                if (document.fullscreenElement) {
-                  this.exitFullscreenAndReset();
-                }
+                e.preventDefault();
+                this.toggleFullscreen();
                 break;
               case "?":
                 e.preventDefault();
-                this.toggleKeyboardShortcuts();
+                this.shortcuts.classList.toggle("show");
                 break;
-            }
-          });
-
-          // Paste support
-          document.addEventListener("paste", (event) => {
-            try {
-              const items = event.clipboardData?.items || [];
-              for (let item of items) {
-                if (item.type.indexOf("image") !== -1) {
-                  const blob = item.getAsFile();
-                  this.loadFile(blob);
-                  break;
-                }
-              }
-            } catch (err) {
-              console.warn("Paste action failed:", err.message);
             }
           });
 
           // Enter key to load URL
           this.input.addEventListener("keydown", (e) => {
-            if (e.key === "Enter") {
-              this.loadImage();
-            }
+            if (e.key === "Enter") this.loadImage();
           });
 
-          // Fullscreen change events
-          document.addEventListener("fullscreenchange", () => {
-            if (document.fullscreenElement) {
-              document.body.classList.add("fullscreen-active");
-            } else {
-              document.body.classList.remove("fullscreen-active");
+          // Paste support
+          document.addEventListener("paste", (e) => {
+            const items = e.clipboardData?.items || [];
+            for (let item of items) {
+              if (item.type.indexOf("image") !== -1) {
+                this.loadFile(item.getAsFile());
+                break;
+              }
             }
           });
-        }
-
-        toggleKeyboardShortcuts() {
-          this.keyboardShortcuts.classList.toggle("show");
-        }
-
-        async toggleFullscreen() {
-          const elem = document.getElementById("viewer");
-
-          try {
-            if (!document.fullscreenElement) {
-              await elem.requestFullscreen();
-            } else {
-              await document.exitFullscreen();
-            }
-          } catch (err) {
-            console.warn("Fullscreen operation failed:", err.message);
-          }
-        }
-
-        async exitFullscreenAndReset() {
-          try {
-            if (document.fullscreenElement) {
-              await document.exitFullscreen();
-            } else {
-              document.body.classList.remove("fullscreen-active");
-            }
-            this.resetZoom();
-          } catch (err) {
-            console.warn("Exit fullscreen failed:", err.message);
-          }
         }
       }
 
-      // Initialize the app
-      const app = new ZoomViewer();
+      const app = new ImageViewer();
     </script>
   </body>
 </html>
